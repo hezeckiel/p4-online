@@ -1,0 +1,57 @@
+<%
+if(locals.moves){
+    if(moves.length % 2 == 0) var movesleft = 21-moves.length/2;
+    else{
+        if(next) var movesleft = 21-(moves.length-1)/2;
+        if(!next) var movesleft = 21-(moves.length+1)/2;
+    }
+}
+else var movesleft = 21;
+ %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puissance 4 en ligne</title>
+    <script type="text/javascript" src="../assets/javascripts/jquery.js"></script>
+    <script type="text/javascript">
+        var playerid = '<%= playerid %>';
+        var gameid = '<%= gameid %>';
+        var l = <%= movesleft %>;
+    </script>
+    <% if(next){ %>
+        <script>$(function(){$('div.column').attr('id','playable');});</script>
+    <% } %>
+    <script type="text/javascript" src="../socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="../assets/javascripts/client.js"></script>
+    <link rel="stylesheet" href="../assets/semantic-ui/icon.min.css">
+    <link rel="stylesheet" href="../assets/stylesheets/game.css">
+</head>
+<body>
+    <% if(locals.status == 1){ %>
+    <div class="prev"><i class="white sync loading icon" style="margin-right:10px;"></i>En attente du joueur adverse, envoyez ce lien pour inviter un ami: <input class="link" value="http://89.158.228.86:8080/puissance4/invite/<%= gameid %>" disabled></div>
+    <% } %>
+    <div class="fond"></div>
+    <div class="content">
+        <img src="../assets/images/grille.png" class="grid" />
+        <% for(var i=0;i<=6;i++){ %>
+            <div class="column player<%= color %>"></div>
+        <% } %>
+
+        <div class="column-right">
+            <div class="count">
+                <div class="own piece-<%= color %> "></div>
+                <span class="num">x<%= movesleft %></span>
+            </div>
+            <a href="logout" class="leave"> <i class="big flag icon"></i><br>Abandonner</a>
+        </div>
+
+
+        <% if(locals.moves){moves.forEach(function(move){ %>
+                    <div class="piece piece-<%= move.color %> <% if(move == moves[moves.length-1]){ %>focused<% } %>" id="<%= move.case %>"></div>
+        <% });} %>
+
+    </div>
+</body>
+</html>
